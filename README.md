@@ -135,6 +135,11 @@ Validated case by case against Transfermarkt: Essugo (academy), Darwin Núñez (
 2. Open the report in Power BI Desktop. If it is the `.pbit` template, Power BI asks for the data folder and loads it.
 3. If the file paths differ, update them in Transform data → Data source settings, then refresh.
 
+## Inside PowerBI
+
+1. While navigating through the leagues, if you choose one specific league, it will show its insights and KPIs. If you select multiple, it will be default show Portugal's.
+2. All countries represent their biggest leagues (England -> Premier League; Italy -> Serie A; etc), any secondary league is put under "Others".
+
 ```
 portuguese-football-transfers/
 ├── data/      # Kaggle CSVs (not included)
