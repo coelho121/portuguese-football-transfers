@@ -4,7 +4,9 @@
 
 A solo Power BI portfolio project built on Transfermarkt data (2010/11–2025/26), focused on data modelling and DAX. It looks at Portugal as a league against 30 other leagues, then drills into Benfica, FC Porto, Sporting CP and SC Braga: how they make money, and who they buy and sell.
 
-\---
+![League page](images/leagues_screenshot1.png)
+
+---
 
 ## Key findings
 
@@ -41,7 +43,7 @@ A solo Power BI portfolio project built on Transfermarkt data (2010/11–2025/26
 * **Sporting changed model at the end of the decade**: academy players led sales revenue until 2018/19; since 2019/20 bought players lead most seasons.
 * Across the whole market, **paid transfers peak at 22–23 years old**.
 
-\---
+---
 
 ## The dashboard
 
@@ -51,40 +53,48 @@ A solo Power BI portfolio project built on Transfermarkt data (2010/11–2025/26
 |**2 — Club**|How does each club make money?|KPI cards, cumulative net balance, sales vs spend by season, profit vs margin by club, ROI by purchase price, most profitable player and top 10, dynamic insights|
 |**3 — Profile**|Who does each club buy and sell?|Academy vs bought by season, age at signing vs age at sale, positions, nationalities, sales destinations, purchase origins, dynamic insights|
 
-\---
+**Club page (Benfica)**
+
+![Club page](images/club_benfica.png)
+
+**Profile page (Benfica)**
+
+![Profile page](images/profile_benfica.png)
+
+---
 
 ## Data
 
 * **Source:** [Football Data from Transfermarkt](https://www.kaggle.com/datasets/davidcariboo/player-scores) (Kaggle, `davidcariboo/player-scores`), maintained by a public pipeline and updated weekly. This project uses version 679.
-* **Tables used:** `transfers` (99k+ rows), `players`, `clubs`, `competitions`. `player\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_valuations` is loaded for a future version.
-* **Scope:** 01/07/2010–30/06/2026 (16 full seasons). Rows after 30/06/2026 (\~1,000 pre-agreed deals) were removed.
+* **Tables used:** `transfers` (99k+ rows), `players`, `clubs`, `competitions`. `player_valuations` is loaded for a future version.
+* **Scope:** 01/07/2010–30/06/2026 (16 full seasons). Rows after 30/06/2026 (~1,000 pre-agreed deals) were removed.
 * **Transformations (Power Query):** players reduced to 6 columns (id, name, date of birth, position, sub-position, citizenship), competitions filtered to domestic leagues, position labels renamed (Attack → Forward, Midfield → Midfielder).
 
-\---
+---
 
 ## Data model
 
 Star schema with `transfers` as the fact table.
 
 * **Dimensions:** `players`, `clubs`, `competitions` and a DAX date table (`Dates`, seasons running July–June).
-* **Two relationships between `clubs` and `transfers`:** seller side (`from\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_parent\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_id`, active) and buyer side (`to\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_parent\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_id`, inactive, switched on with `USERELATIONSHIP` in the buy-side measures).
+* **Two relationships between `clubs` and `transfers`:** seller side (`from_parent_id`, active) and buyer side (`to_parent_id`, inactive, switched on with `USERELATIONSHIP` in the buy-side measures).
 * **`ClubParents`:** a manual mapping of 27 club IDs (main teams, B teams and youth teams) to the four parent clubs, so academy promotions and B-team sales roll up to the right club. Text matching was unusable ("Sporting" alone matches Sporting Macau, Osasco Sporting and others).
 * **`Countries`:** a disconnected table, so revenue (seller country) and spend (buyer country) can share one axis.
-* **`\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_Measures`:** a dedicated table for all measures.
+* **`_Measures`:** a dedicated table for all measures.
 
 ### Buy–sell pairing
 
 The core of the project is matching each sale to the purchase of the same player, using calculated columns on `transfers` (the link between a sale and its purchase is a fixed property of the row and must not change with slicers):
 
-* `movement\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_type`, `is\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_internal\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_move`, `is\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_loan\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_out`, `is\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_loan\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_return`: separate real market moves from academy promotions and loans (zero-fee moves between the same two parent clubs, in reverse direction, within 800 days).
-* `is\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_sale`: a paid transfer whose seller is one of the four clubs.
-* `buy\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_date`, `buy\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_fee`: the most recent real entry of the same player into the same parent club before the sale.
-* `sale\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_origin`: Academy (no purchase, or joined before 18), Bought, Free or Unknown.
-* `profit`, `holding\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_days`, `roi\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_annualized`, `buy\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_bracket`.
+* `movement_type`, `is_internal_move`, `is_loan_out`, `is_loan_return`: separate real market moves from academy promotions and loans (zero-fee moves between the same two parent clubs, in reverse direction, within 800 days).
+* `is_sale`: a paid transfer whose seller is one of the four clubs.
+* `buy_date`, `buy_fee`: the most recent real entry of the same player into the same parent club before the sale.
+* `sale_origin`: Academy (no purchase, or joined before 18), Bought, Free or Unknown.
+* `profit`, `holding_days`, `roi_annualized`, `buy_bracket`.
 
 Validated case by case against Transfermarkt: Essugo (academy), Darwin Núñez (€34m purchase, 665 days), Cristiano Ronaldo (€2k at 12, academy by the age rule), Palhinha, João Mário, Otávio and others.
 
-\---
+---
 
 ## Metric definitions
 
@@ -102,7 +112,7 @@ Validated case by case against Transfermarkt: Essugo (academy), Darwin Núñez (
 
 **Net Transfer vs Total Profit:** players bought but never resold count as spend in Net Transfer but never enter Total Profit, and a player bought before 2010 and sold inside the window enters Total Profit with his original cost. Net Transfer is how much cash was left; Total Profit is how much was earned on the players actually sold.
 
-\---
+---
 
 ## Technical highlights
 
@@ -113,21 +123,21 @@ Validated case by case against Transfermarkt: Essugo (academy), Darwin Núñez (
 * **Pop-up filter panel** built with bookmarks and the selection pane.
 * **Ranking with a volume threshold** (`RANKX` over leagues above €1bn in volume) kept consistent between the chart and the insight text.
 
-\---
+---
 
 ## Limitations
 
-* Only \~18% of transfers have a fee above zero. Fees are Transfermarkt's reported figures, often estimates.
-* The `clubs` table covers 32 domestic leagues (top divisions only). Transfers involving lower divisions or other leagues have no country (\~6% of total value). In purchases this is significant for Porto, Braga and Sporting, and part of it is Portuguese lower-league clubs.
+* Only ~18% of transfers have a fee above zero. Fees are Transfermarkt's reported figures, often estimates.
+* The `clubs` table covers 32 domestic leagues (top divisions only). Transfers involving lower divisions or other leagues have no country (~6% of total value). In purchases this is significant for Porto, Braga and Sporting, and part of it is Portuguese lower-league clubs.
 * A club's country comes from its current league, so a relegated club can be misassigned in earlier seasons.
 * Academy players have a cost of zero. Real academy costs (staff, facilities, wages) are not in the data, so ROI is calculated for bought players only.
 * Purchases with an unknown fee are excluded from ROI.
-* All values are nominal: no adjustment for inflation or for market growth (\~24x over the period).
+* All values are nominal: no adjustment for inflation or for market growth (~24x over the period).
 * Weighted ROI ignores time; annualized ROI is only shown per player.
 * Loan detection and the academy rule (joined before 18) are heuristics, validated on test cases but not exhaustive.
 * Some price brackets rest on very few sales (Braga has 2 sales of players bought for €5–15m and none above €15m).
 
-\---
+---
 
 ## How to open
 
@@ -137,7 +147,7 @@ Validated case by case against Transfermarkt: Essugo (academy), Darwin Núñez (
 
 ## Inside PowerBI
 
-1. While navigating through the leagues, if you choose one specific league, it will show its insights and KPIs. If you select multiple, it will be default show Portugal's.
+1. While navigating through the leagues, if you choose one specific league, it will show its insights and KPIs. If you select multiple, it shows Portugal's by default.
 2. All countries represent their biggest leagues (England -> Premier League; Italy -> Serie A; etc), any secondary league is put under "Others".
 
 ```
@@ -148,7 +158,7 @@ portuguese-football-transfers/
 └── images/    # screenshots
 ```
 
-\---
+---
 
 ## Next steps (v2)
 
@@ -157,7 +167,6 @@ portuguese-football-transfers/
 * Market-adjusted profit (fees indexed to the season's median paid fee).
 * Extending the parent-club mapping to foreign clubs.
 
-\---
+---
 
 **Author:** Martim Coelho - Information Management, NOVA IMS. Built for self training and interest purposes
-
