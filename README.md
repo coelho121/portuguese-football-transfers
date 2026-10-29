@@ -49,9 +49,9 @@ A solo Power BI portfolio project built on Transfermarkt data (2010/11–2025/26
 
 |Page|Question|Main visuals|
 |-|-|-|
-|**1 — League**|How does Portugal compare with other leagues?|KPI cards, net balance by season, revenue vs spend scatter with break-even shading, Trade Balance Index ranking, revenue share by season, top-club share of Portuguese revenue, record export, dynamic insights, pop-up country filter|
-|**2 — Club**|How does each club make money?|KPI cards, cumulative net balance, sales vs spend by season, profit vs margin by club, ROI by purchase price, most profitable player and top 10, dynamic insights|
-|**3 — Profile**|Who does each club buy and sell?|Academy vs bought by season, age at signing vs age at sale, positions, nationalities, sales destinations, purchase origins, dynamic insights|
+|**1 - League**|How does Portugal compare with other leagues?|KPI cards, net balance by season, revenue vs spend scatter with break-even shading, Trade Balance Index ranking, revenue share by season, top-club share of Portuguese revenue, record export, dynamic insights, pop-up country filter|
+|**2 - Club**|How does each club make money?|KPI cards, cumulative net balance, sales vs spend by season, profit vs margin by club, ROI by purchase price, most profitable player and top 10, dynamic insights|
+|**3 - Profile**|Who does each club buy and sell?|Academy vs bought by season, age at signing vs age at sale, positions, nationalities, sales destinations, purchase origins, dynamic insights|
 
 **Club page (Benfica)**
 
